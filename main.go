@@ -15,7 +15,7 @@ var (
 )
 
 func usage() {
-	log.Fatal("Usage: gemgen [-i] [-o]")
+	log.Fatal("Usage: gemgen [-e] [-i input.md] [-o output.gmi]")
 }
 
 func main() {
