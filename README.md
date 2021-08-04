@@ -1,4 +1,4 @@
-# gemgen
+# gemgen - Markdown to Gemtext
 
 Command line tool for converting [Commonmark Markdown](https://commonmark.org/)
 to [Gemtext](https://gemini.circumlunar.space/docs/gemtext.gmi). Gemgen uses the
