@@ -16,7 +16,8 @@ and indented code is converted to the gemtext "fenced" format.
 ## Usage
 
 ```
-gemgen [-e] [-i input.md] [-o output.gmi]
+gemgen [-v] [-e] [-i input.md] [-o output.gmi]
+ -v : Print version and exit.
  -e : Keep emphasis symbols for bold, italics, inline code, and strikethrough.
  -i : Read from a file instead of standard input.
  -o : Write to an output file instead of standard output.

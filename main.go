@@ -10,12 +10,14 @@ import (
 )
 
 var (
-	in  = os.Stdin
-	out = os.Stdout
+	in      = os.Stdin
+	out     = os.Stdout
+	Version string
 )
 
 func usage() {
-	log.Fatal(`gemgen [-e] [-i input.md] [-o output.gmi]
+	log.Fatal(`gemgen [-v] [-e] [-i input.md] [-o output.gmi]
+ -v : Print version and exit.
  -e : Keep emphasis symbols for bold, italics, inline code, and strikethrough.
  -i : Read from a file instead of standard input.
  -o : Write to an output file instead of standard output.`)
@@ -24,13 +26,16 @@ func usage() {
 func main() {
 	log.SetPrefix("")
 	log.SetFlags(0)
-	opts, _, err := getopt.Getopts(os.Args, "ei:o:")
+	opts, _, err := getopt.Getopts(os.Args, "vei:o:")
 	if err != nil {
 		log.Print(err)
 		usage()
 	}
 	for _, opt := range opts {
 		switch opt.Option {
+		case 'v':
+			log.Println("gemgen v" + Version)
+			os.Exit(0)
 		case 'e':
 			gemtext.Emphasis = true
 			gemtext.CodeSpan = true
