@@ -15,7 +15,10 @@ var (
 )
 
 func usage() {
-	log.Fatal("Usage: gemgen [-e] [-i input.md] [-o output.gmi]")
+	log.Fatal(`gemgen [-e] [-i input.md] [-o output.gmi]
+ -e : Keep emphasis symbols for bold, italics, inline code, and strikethrough.
+ -i : Read from a file instead of standard input.
+ -o : Write to an output file instead of standard output.`)
 }
 
 func main() {
@@ -30,6 +33,8 @@ func main() {
 		switch opt.Option {
 		case 'e':
 			gemtext.Emphasis = true
+			gemtext.CodeSpan = true
+			gemtext.Strikethrough = true
 		case 'i':
 			if opt.Value == "-" {
 				continue

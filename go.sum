@@ -2,6 +2,10 @@ git.sr.ht/~kota/goldmark-gemtext v0.0.0-20210801084746-1bc0494c0ed5 h1:wIdw++1h8
 git.sr.ht/~kota/goldmark-gemtext v0.0.0-20210801084746-1bc0494c0ed5/go.mod h1:AN904L7QOoNIWOgzA8Q89zwPC96lfas3Ykza8oonnnE=
 git.sr.ht/~kota/goldmark-gemtext v0.0.0-20210804024909-0c7c4975f7a8 h1:Kf3oXaGb7kAiHZHEbHH5jIlhMYLbHIrnwoaQfYHRe5s=
 git.sr.ht/~kota/goldmark-gemtext v0.0.0-20210804024909-0c7c4975f7a8/go.mod h1:AN904L7QOoNIWOgzA8Q89zwPC96lfas3Ykza8oonnnE=
+git.sr.ht/~kota/goldmark-gemtext v0.0.0-20210805234008-21285e2e3bcb h1:LtnSECh5t1uWtG1GZiP+EWcRgRDCuiu41PzabxxMDR0=
+git.sr.ht/~kota/goldmark-gemtext v0.0.0-20210805234008-21285e2e3bcb/go.mod h1:AN904L7QOoNIWOgzA8Q89zwPC96lfas3Ykza8oonnnE=
+git.sr.ht/~kota/goldmark-gemtext v0.0.0-20210806014044-c98a019d0997 h1:v84+EFHdTR4UZB/paxmSfCp33ACX6gM9MiiDI1+Tads=
+git.sr.ht/~kota/goldmark-gemtext v0.0.0-20210806014044-c98a019d0997/go.mod h1:AN904L7QOoNIWOgzA8Q89zwPC96lfas3Ykza8oonnnE=
 git.sr.ht/~sircmpwn/getopt v0.0.0-20201218204720-9961a9c6298f h1:f5axCdaRzGDCihN3o1Lq0ydn0VlkhY+11G0JOyY5qss=
 git.sr.ht/~sircmpwn/getopt v0.0.0-20201218204720-9961a9c6298f/go.mod h1:wMEGFFFNuPos7vHmWXfszqImLppbc0wEhh6JBfJIUgw=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
