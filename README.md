@@ -23,80 +23,132 @@ gemgen [-v] [-e] [-i input.md] [-o output.gmi]
  -o : Write to an output file instead of standard output.
 ```
 
-## Example
+## Build and Install
 
-Markdown
+Build dependencies:  
+ * golang
+ * make
+ * sed
+ * scdoc
+
+Optionally configure `config.mk` to specify a different install location.  
+Defaults to `/usr/local/`
+
+`sudo make all`
+
+## Uninstall
+
+`sudo make uninstall`
+
+## Examples
+
+### Paragraphs
 ```md
-> If there is a country that has committed unspeakable atrocities in the world,
-> it is the United States of America. They don't care for human beings. - Nelson
-> Mandela
+# Typeface
 
-In 1996, investigative journalist [Gary
-Webb](https://en.wikipedia.org/wiki/Gary_Webb)
-exposed a CIA-run business of selling cocaine produced in Nicaragua, to help
-fund the anti-communist Contras in their fight against the Sandinistas in
-Nicaragua. **These drugs were mostly sold to black communities in California, and
-helped spark the Crack epidemic.** Several of the US dealers such as such as
-[Ross](https://en.wikipedia.org/wiki/%22Freeway%22_Rick_Ross)
-and [Oscar Danilo Blandon](https://en.wikipedia.org/wiki/Oscar_Danilo_Bland%C3%B3n),
-were found to have CIA and DEA ties. Webb's reports were suppressed in the news
-media. In 1997, Webb stated: "If we had met five years ago, you wouldn't have
-found a more staunch defender of the newspaper industry than me ... And then I
-wrote some stories that made me realize how sadly misplaced my bliss had been.
-The reason I'd enjoyed such smooth sailing for so long hadn't been, as I'd
-assumed, because I was careful and diligent and good at my job ... The truth was
-that, in all those years, I hadn't written anything important enough to
-suppress." In 2004, Webb was found dead in his home, shot in the back of the
-head twice. His death was ruled a suicide.
+A typeface is the design of [lettering](https://en.wikipedia.org/wiki/Lettering)
+that can include variations in size, weight (e.g. bold), slope (e.g. italic),
+width (e.g. condensed), and so on. Each of these variations of the typeface is a
+font. There are [thousands of different
+typefaces](https://en.wikipedia.org/wiki/List_of_typefaces) in existence, with
+new ones being developed constantly. The art and craft of designing typefaces is
+called [_type design_](https://en.wikipedia.org/wiki/Type_design). Designers of typefaces are called [_type designers_](https://en.wikipedia.org/wiki/Type_designer) and are
+often employed by [_type foundries_](https://en.wikipedia.org/wiki/Type_foundry). In digital typography, type designers are
+sometimes also called _font developers_ or _font designers_.
 
-_If We Must Die_ - Claude McKay
+## Popular Fonts
 
-If we must die—let it not be like hogs\
-Hunted and penned in an inglorious spot,\
-While round us bark the mad and hungry dogs,\
-Making their mock at our accursed lot.\
-If we must die—oh, let us nobly die,\
-So that our precious blood may not be shed\
-In vain; then even the monsters we defy\
-Shall be constrained to honor us though dead!\
-Oh, Kinsmen! We must meet the common foe;\
-Though far outnumbered, let us show us brave,\
-And for their thousand blows deal one deathblow!\
-What though before us lies the open grave?\
-Like men we'll face the murderous, cowardly pack,\
-Pressed to the wall, dying, but fighting back!\
+[DejaVu](https://dejavu-fonts.github.io/)\
+[EB Garamond](https://github.com/octaviopardo/EBGaramond12)\
+[Merriweather](https://fonts.google.com/specimen/Merriweather)\
+[Minion](https://fonts.adobe.com/fonts/minion)\
+[Palatino](https://en.wikipedia.org/wiki/Palatino)\
+[PT Sans](https://en.wikipedia.org/wiki/PT_Fonts)
+```
+```gemtext
+# Typeface
 
-[Claude McKay](https://poets.org/poet/claude-mckay)
-[US Atrocities](https://github.com/dessalines/essays/blob/master/us_atrocities.md)
+A typeface is the design of lettering that can include variations in size, weight (e.g. bold), slope (e.g. italic), width (e.g. condensed), and so on. Each of these variations of the typeface is a font. There are thousands of different typefaces in existence, with new ones being developed constantly. The art and craft of designing typefaces is called type design. Designers of typefaces are called type designers and are often employed by type foundries. In digital typography, type designers are sometimes also called font developers or font designers.
+
+=> https://en.wikipedia.org/wiki/Lettering lettering
+=> https://en.wikipedia.org/wiki/List_of_typefaces thousands of different typefaces
+=> https://en.wikipedia.org/wiki/Type_design type design
+=> https://en.wikipedia.org/wiki/Type_designer type designers
+=> https://en.wikipedia.org/wiki/Type_foundry type foundries
+
+## Popular Fonts
+
+=> https://dejavu-fonts.github.io/ DejaVu
+=> https://github.com/octaviopardo/EBGaramond12 EB Garamond
+=> https://fonts.google.com/specimen/Merriweather Merriweather
+=> https://fonts.adobe.com/fonts/minion Minion
+=> https://en.wikipedia.org/wiki/Palatino Palatino
+=> https://en.wikipedia.org/wiki/PT_Fonts PT Sans
 ```
 
-Gemtext
+### Qoutes
+```md
+> When education is not liberatory, the dream of the oppressed is to be the
+> oppressor. - Paulo Freire
+```
 ```gemtext
-> If there is a country that has committed unspeakable atrocities in the world, it is the United States of America. They don't care for human beings. - Nelson Mandela
+> When education is not liberatory, the dream of the oppressed is to be the oppressor. - Paulo Freire
+```
 
-In 1996, investigative journalist Gary Webb exposed a CIA-run business of selling cocaine produced in Nicaragua, to help fund the anti-communist Contras in their fight against the Sandinistas in Nicaragua. These drugs were mostly sold to black communities in California, and helped spark the Crack epidemic. Several of the US dealers such as such as Ross and Oscar Danilo Blandon, were found to have CIA and DEA ties. Webb's reports were suppressed in the news media. In 1997, Webb stated: "If we had met five years ago, you wouldn't have found a more staunch defender of the newspaper industry than me ... And then I wrote some stories that made me realize how sadly misplaced my bliss had been. The reason I'd enjoyed such smooth sailing for so long hadn't been, as I'd assumed, because I was careful and diligent and good at my job ... The truth was that, in all those years, I hadn't written anything important enough to suppress." In 2004, Webb was found dead in his home, shot in the back of the head twice. His death was ruled a suicide.
+### Linebreaks
+```md
+_A Farewell_ - Langston Hughes
 
-=> https://en.wikipedia.org/wiki/Gary_Webb Gary Webb
-=> https://en.wikipedia.org/wiki/%22Freeway%22_Rick_Ross Ross
-=> https://en.wikipedia.org/wiki/Oscar_Danilo_Bland%C3%B3n Oscar Danilo Blandon
+With gypsies and sailors,\
+Wanderers of the hills and seas,\
+I go to seek my fortune.\
+With pious folk and fair\
+I must have a parting.\
+But you will not miss me, —\
+You who live between the hills\
+And have never seen the seas.
+```
+```gemtext
+A Farewell - Langston Hughes
 
-If We Must Die - Claude McKay
+With gypsies and sailors,
+Wanderers of the hills and seas,
+I go to seek my fortune.
+With pious folk and fair
+I must have a parting.
+But you will not miss me, —
+You who live between the hills
+And have never seen the seas.
+```
 
-If we must die—let it not be like hogs
-Hunted and penned in an inglorious spot,
-While round us bark the mad and hungry dogs,
-Making their mock at our accursed lot.
-If we must die—oh, let us nobly die,
-So that our precious blood may not be shed
-In vain; then even the monsters we defy
-Shall be constrained to honor us though dead!
-Oh, Kinsmen! We must meet the common foe;
-Though far outnumbered, let us show us brave,
-And for their thousand blows deal one deathblow!
-What though before us lies the open grave?
-Like men we'll face the murderous, cowardly pack,
-Pressed to the wall, dying, but fighting back!\
+### Lists
+```md
+* item
+* item
+* item
 
-=> https://poets.org/poet/claude-mckay Claude McKay
-=> https://github.com/dessalines/essays/blob/master/us_atrocities.md US Atrocities
+- item
+  - sub-item (two spaces)
+  - sub-item
+- item
+- item
+
+1. one
+2. two
+3. three
+```
+```gemtext
+* item
+* item
+* item
+
+* item
+  * sub-item (two spaces)
+  * sub-item
+* item
+* item
+
+* one
+* two
+* three
 ```
