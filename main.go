@@ -16,9 +16,10 @@ var (
 )
 
 func usage() {
-	log.Fatal(`gemgen [-v] [-e] [-i input.md] [-o output.gmi]
+	log.Fatal(`gemgen [-e | -E] [-i input.md] [-o output.gmi]
  -v : Print version and exit.
  -e : Keep emphasis symbols for bold, italics, inline code, and strikethrough.
+ -E : Use unicode magic for 𝗯𝗼𝗹𝗱, 𝘪𝘵𝘢𝘭𝘪𝘤, and s̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶.
  -i : Read from a file instead of standard input.
  -o : Write to an output file instead of standard output.`)
 }
@@ -26,7 +27,7 @@ func usage() {
 func main() {
 	log.SetPrefix("")
 	log.SetFlags(0)
-	opts, _, err := getopt.Getopts(os.Args, "vei:o:")
+	opts, _, err := getopt.Getopts(os.Args, "veEi:o:")
 	if err != nil {
 		log.Print(err)
 		usage()
@@ -40,6 +41,9 @@ func main() {
 			gemtext.Emphasis = true
 			gemtext.CodeSpan = true
 			gemtext.Strikethrough = true
+		case 'E':
+			gemtext.UnicodeEmphasis = true
+			gemtext.UnicodeStrikethrough = true
 		case 'i':
 			if opt.Value == "-" {
 				continue
