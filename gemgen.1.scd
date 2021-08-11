@@ -6,7 +6,7 @@ gemgen - Markdown to Gemtext
 
 # SYNOPSIS
 
-*gemgen [-v] [-e] [-i input.md] [-o output.gmi]*
+*gemgen [-v] [-e | -E] [-i input.md] [-o output.gmi]*
 
 # DESCRIPTION
 
@@ -27,6 +27,8 @@ lines, and indented code is converted to the gemtext fenced format.
 		Print version and exit.
 	*-e*
 		Keep emphasis symbols for bold, italics, inline code, and strikethrough.
+	*-E*
+		Use unicode magic for bold, italic, and strikethrough.
 	*-i input.md*
 		Read from a file instead of standard input.
 	*-o output.gmi*
