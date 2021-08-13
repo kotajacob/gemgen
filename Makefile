@@ -7,7 +7,7 @@ include config.mk
 all: clean build
 
 build:
-	go build -ldflags "-X main.Version=$(VERSION)"
+	go build -ldflags "-X main.Version=$(VERSION)" $(GOFLAGS)
 	scdoc < gemgen.1.scd | sed "s/VERSION/$(VERSION)/g" > gemgen.1
 
 clean:
