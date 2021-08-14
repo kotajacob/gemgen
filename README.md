@@ -24,7 +24,11 @@ gemgen [-v] [-e | -E] [-i input.md] [-o output.gmi]
  -o : Write to an output file instead of standard output.
 ```
 
-## Build and Install
+## Packages
+
+`gemgen` - Arch Linux (AUR)
+
+## Build
 
 Build dependencies:  
  * golang
@@ -35,7 +39,7 @@ Build dependencies:
 Optionally configure `config.mk` to specify a different install location.  
 Defaults to `/usr/local/`
 
-`sudo make all`
+`sudo make intstall`
 
 ## Uninstall
 
