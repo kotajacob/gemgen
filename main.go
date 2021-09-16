@@ -51,9 +51,9 @@ func main() {
 			log.Println("gemgen v" + Version)
 			os.Exit(0)
 		case 'e':
-			gemOptions = append(gemOptions, gem.WithEmphasis(gem.EmphasisMarkdown))
+			gemOptions = append(gemOptions, gem.WithEmphasis(gem.EmphasisMarkdown), gem.WithCodeSpan(gem.CodeSpanMarkdown), gem.WithStrikethrough(gem.StrikethroughMarkdown))
 		case 'E':
-			gemOptions = append(gemOptions, gem.WithEmphasis(gem.EmphasisUnicode))
+			gemOptions = append(gemOptions, gem.WithEmphasis(gem.EmphasisUnicode), gem.WithStrikethrough(gem.StrikethroughUnicode))
 		}
 	}
 
