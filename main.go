@@ -2,20 +2,20 @@ package main
 
 import (
 	"bytes"
-	"os"
 	"io"
 	"log"
+	"os"
 
+	gem "git.sr.ht/~kota/goldmark-gemtext"
 	"git.sr.ht/~sircmpwn/getopt"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
-	gem "git.sr.ht/~kota/goldmark-gemtext"
 )
 
 var (
-	inputBytes      = os.Stdin
-	out     = os.Stdout
-	Version string
+	inputBytes = os.Stdin
+	out        = os.Stdout
+	Version    string
 )
 
 func usage() {
@@ -52,9 +52,18 @@ func main() {
 			log.Println("gemgen v" + Version)
 			os.Exit(0)
 		case 'e':
-			gemOptions = append(gemOptions, gem.WithEmphasis(gem.EmphasisMarkdown), gem.WithCodeSpan(gem.CodeSpanMarkdown), gem.WithStrikethrough(gem.StrikethroughMarkdown))
+			gemOptions = append(
+				gemOptions,
+				gem.WithEmphasis(gem.EmphasisMarkdown),
+				gem.WithCodeSpan(gem.CodeSpanMarkdown),
+				gem.WithStrikethrough(gem.StrikethroughMarkdown),
+			)
 		case 'E':
-			gemOptions = append(gemOptions, gem.WithEmphasis(gem.EmphasisUnicode), gem.WithStrikethrough(gem.StrikethroughUnicode))
+			gemOptions = append(
+				gemOptions,
+				gem.WithEmphasis(gem.EmphasisUnicode),
+				gem.WithStrikethrough(gem.StrikethroughUnicode),
+			)
 		case 'h':
 			gemOptions = append(gemOptions, gem.WithHeadingSpace(gem.HeadingSpaceSingle))
 		}
@@ -72,5 +81,5 @@ func main() {
 	if err := md.Convert([]byte(src), &buf); err != nil {
 		log.Fatal(err)
 	}
-	log.Print(buf.String())
+	io.Copy(os.Stdout, &buf)
 }
