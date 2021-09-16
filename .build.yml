@@ -1,0 +1,9 @@
+image: debian/stable
+packages:
+  - golang
+sources:
+  - https://git.sr.ht/~kota/gemgen
+tasks:
+  - test: |
+      cd gemgen
+      go test
