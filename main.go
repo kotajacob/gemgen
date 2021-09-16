@@ -1,27 +1,28 @@
 package main
 
 import (
+	"bytes"
+	"os"
 	"io"
 	"log"
-	"os"
 
-	gemtext "git.sr.ht/~kota/goldmark-gemtext"
 	"git.sr.ht/~sircmpwn/getopt"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
+	gem "git.sr.ht/~kota/goldmark-gemtext"
 )
 
 var (
-	in      = os.Stdin
+	inputBytes      = os.Stdin
 	out     = os.Stdout
 	Version string
 )
 
 func usage() {
-	log.Fatal(`gemgen [-e | -E] [-i input.md] [-o output.gmi]
- -v : Print version and exit.
- -e : Keep emphasis symbols for bold, italics, inline code, and strikethrough.
- -E : Use unicode magic for 𝗯𝗼𝗹𝗱, 𝘪𝘵𝘢𝘭𝘪𝘤, and s̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶.
- -i : Read from a file instead of standard input.
- -o : Write to an output file instead of standard output.`)
+	log.Fatal(`gemgen [-e | -E] input.md
+-v : Print version and exit.
+-e : Print markdown emphasis symbols for bold, italics, inline code, and strikethrough.
+-E : Print unicode symbols for 𝗯𝗼𝗹𝗱, 𝘪𝘵𝘢𝘭𝘪𝘤, and s̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶.`)
 }
 
 func main() {
@@ -32,45 +33,41 @@ func main() {
 		log.Print(err)
 		usage()
 	}
+
+	// create markdown parser
+	var buf bytes.Buffer
+	md := goldmark.New(
+		goldmark.WithExtensions(
+			extension.Linkify,
+			extension.Strikethrough,
+		),
+	)
+
+	// get opts
+	var gemOptions []gem.Option
 	for _, opt := range opts {
 		switch opt.Option {
 		case 'v':
 			log.Println("gemgen v" + Version)
 			os.Exit(0)
 		case 'e':
-			gemtext.Emphasis = true
-			gemtext.CodeSpan = true
-			gemtext.Strikethrough = true
+			gemOptions = append(gemOptions, gem.WithEmphasis(gem.EmphasisMarkdown))
 		case 'E':
-			gemtext.UnicodeEmphasis = true
-			gemtext.UnicodeStrikethrough = true
-		case 'i':
-			if opt.Value == "-" {
-				continue
-			}
-			in, err = os.Open(opt.Value)
-			if err != nil {
-				log.Print(err)
-				usage()
-			}
-		case 'o':
-			out, err = os.Create(opt.Value)
-			if err != nil {
-				log.Print(err)
-				usage()
-			}
+			gemOptions = append(gemOptions, gem.WithEmphasis(gem.EmphasisUnicode))
 		}
 	}
 
 	// load markdown
-	source, err := io.ReadAll(in)
+	src, err := io.ReadAll(inputBytes)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// parse markdown and write reformatted source
-	err = gemtext.Format(source, out)
-	if err != nil {
+	// attach gemtext renderer
+	md.SetRenderer(gem.New(gemOptions...))
+
+	if err := md.Convert([]byte(src), &buf); err != nil {
 		log.Fatal(err)
 	}
+	log.Print(buf.String())
 }
