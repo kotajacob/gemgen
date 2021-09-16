@@ -6,7 +6,7 @@ gemgen - Markdown to Gemtext
 
 # SYNOPSIS
 
-*gemgen [-v] [-e | -E] [-i input.md] [-o output.gmi]*
+*gemgen [-v | -e | -E | -h] [-H linkmode]*
 
 # DESCRIPTION
 
@@ -26,13 +26,24 @@ lines, and indented code is converted to the gemtext fenced format.
 	*-v*
 		Print version and exit.
 	*-e*
-		Keep emphasis symbols for bold, italics, inline code, and strikethrough.
+		Print markdown emphasis symbols for bold, italics, inline code, and
+		strikethrough.
 	*-E*
-		Use unicode magic for bold, italic, and strikethrough.
-	*-i input.md*
-		Read from a file instead of standard input.
-	*-o output.gmi*
-		Write to an output file instead of standard output.
+		Print unicode symbols for 𝗯𝗼𝗹𝗱, 𝘪𝘵𝘢𝘭𝘪𝘤, and s̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶.
+	*-h*
+		Disable blank lines after headings.
+	*-H*
+		Specify a heading link mode.
+			*off*   Ignore links in headings; writing the label of the link in it's
+				place.
+			*auto*  If the heading contains on links, use the first link instead of
+				printing a heading. Otherwise print a heading, ignoreing links.
+			*below* Print all links below headings.
+	*-P*
+		Specify a paragraph link mode.
+			*off*   Ignore links in paragraphs; writing the label of the link in it's
+				place.
+			*below* Print all links below paragraph.
 
 # AUTHORS
 
