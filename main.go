@@ -22,13 +22,14 @@ func usage() {
 	log.Fatal(`gemgen [-e | -E] input.md
 -v : Print version and exit.
 -e : Print markdown emphasis symbols for bold, italics, inline code, and strikethrough.
--E : Print unicode symbols for 𝗯𝗼𝗹𝗱, 𝘪𝘵𝘢𝘭𝘪𝘤, and s̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶.`)
+-E : Print unicode symbols for 𝗯𝗼𝗹𝗱, 𝘪𝘵𝘢𝘭𝘪𝘤, and s̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶.
+-h : Disable blank lines after headings.`)
 }
 
 func main() {
 	log.SetPrefix("")
 	log.SetFlags(0)
-	opts, _, err := getopt.Getopts(os.Args, "veEi:o:")
+	opts, _, err := getopt.Getopts(os.Args, "veEh")
 	if err != nil {
 		log.Print(err)
 		usage()
@@ -54,6 +55,8 @@ func main() {
 			gemOptions = append(gemOptions, gem.WithEmphasis(gem.EmphasisMarkdown), gem.WithCodeSpan(gem.CodeSpanMarkdown), gem.WithStrikethrough(gem.StrikethroughMarkdown))
 		case 'E':
 			gemOptions = append(gemOptions, gem.WithEmphasis(gem.EmphasisUnicode), gem.WithStrikethrough(gem.StrikethroughUnicode))
+		case 'h':
+			gemOptions = append(gemOptions, gem.WithHeadingSpace(gem.HeadingSpaceSingle))
 		}
 	}
 
