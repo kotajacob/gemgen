@@ -7,41 +7,96 @@ import (
 	"os"
 
 	gem "git.sr.ht/~kota/goldmark-gemtext"
-	"git.sr.ht/~sircmpwn/getopt"
+	flag "github.com/spf13/pflag"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
 )
 
-var (
-	inputBytes = os.Stdin
-	out        = os.Stdout
-	Version    string
-)
-
-func usage() {
-	log.Fatal(`gemgen [-v | -e | -E | -h] [-H linkmode]
--v : Print version and exit.
--e : Print markdown emphasis symbols for bold, italics, inline code, and strikethrough.
--E : Print unicode symbols for 𝗯𝗼𝗹𝗱, 𝘪𝘵𝘢𝘭𝘪𝘤, and s̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶.
--h : Disable blank lines after headings.
--H : Specify a heading link mode.
-	off : Ignore links in headings; writing the label of the link in it's place.
-	auto: If the heading contains on links, use the first link instead of printing a heading. Otherwise print a heading, ignoreing links.
-	below: Print all links below headings.
--P : Specify a paragraph link mode.
-	off : Ignore links in paragraphs; writing the label of the link in it's place.
-	below: Print all links below paragraph.`)
-}
+var Version string
 
 func main() {
 	log.SetPrefix("")
 	log.SetFlags(0)
-	opts, _, err := getopt.Getopts(os.Args, "veEhH:P:")
+
+	// get options
+	opts := options()
+
+	// load markdown
+	src, err := io.ReadAll(os.Stdin)
 	if err != nil {
-		log.Print(err)
-		usage()
+		log.Fatal(err)
 	}
 
+	// render
+	if err := render(src, opts); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func options() []gem.Option {
+	versionFlag := flag.BoolP("version", "v", false, "print version and exit")
+	emphasisFlag := flag.StringP("emphasis", "e", "none", `representation of bold, italics, inline code, and strikethrough
+	none     : do not print emphasis marks
+	markdown : print markdown style emphasis marks`)
+	headingLinkFlag := flag.StringP("heading-links", "a", "auto", `specify how links in headings are printed
+	auto  : print link-only headings as links
+	below : print links in headings below the heading
+	off   : ignore links in headings`)
+	paragraphLinkFlag := flag.StringP("paragraph-links", "p", "below", `specify how links in paragraphs are printed
+	below : print links in paragraphs below the paragraph
+	off   : ignore links in paragraphs`)
+	headingNewlineFlag := flag.BoolP("heading-newline", "A", false, `disable printing a newline below each heading`)
+	flag.Parse()
+
+	// use command line flags to create parser options
+	if *versionFlag == true {
+		log.Println("gemgen v" + Version)
+		os.Exit(0)
+	}
+	var gemOptions []gem.Option
+	switch *emphasisFlag {
+	case "none":
+	case "markdown":
+		gemOptions = append(
+			gemOptions,
+			gem.WithEmphasis(gem.EmphasisMarkdown),
+			gem.WithCodeSpan(gem.CodeSpanMarkdown),
+			gem.WithStrikethrough(gem.StrikethroughMarkdown),
+		)
+	case "unicode":
+		gemOptions = append(
+			gemOptions,
+			gem.WithEmphasis(gem.EmphasisUnicode),
+			gem.WithStrikethrough(gem.StrikethroughUnicode),
+		)
+	}
+
+	if *headingNewlineFlag == true {
+		gemOptions = append(gemOptions, gem.WithHeadingSpace(gem.HeadingSpaceSingle))
+	}
+
+	switch *headingLinkFlag {
+	case "auto":
+	case "off":
+		gemOptions = append(gemOptions, gem.WithHeadingLink(gem.HeadingLinkOff))
+	case "below":
+		gemOptions = append(gemOptions, gem.WithHeadingLink(gem.HeadingLinkBelow))
+	default:
+		log.Println("unknown link mode")
+	}
+
+	switch *paragraphLinkFlag {
+	case "off":
+		gemOptions = append(gemOptions, gem.WithParagraphLink(gem.ParagraphLinkOff))
+	case "below":
+		gemOptions = append(gemOptions, gem.WithParagraphLink(gem.ParagraphLinkBelow))
+	default:
+		log.Println("unknown link mode")
+	}
+	return gemOptions
+}
+
+func render(src []byte, opts []gem.Option) error {
 	// create markdown parser
 	var buf bytes.Buffer
 	md := goldmark.New(
@@ -51,64 +106,11 @@ func main() {
 		),
 	)
 
-	// get opts
-	var gemOptions []gem.Option
-	for _, opt := range opts {
-		switch opt.Option {
-		case 'v':
-			log.Println("gemgen v" + Version)
-			os.Exit(0)
-		case 'e':
-			gemOptions = append(
-				gemOptions,
-				gem.WithEmphasis(gem.EmphasisMarkdown),
-				gem.WithCodeSpan(gem.CodeSpanMarkdown),
-				gem.WithStrikethrough(gem.StrikethroughMarkdown),
-			)
-		case 'E':
-			gemOptions = append(
-				gemOptions,
-				gem.WithEmphasis(gem.EmphasisUnicode),
-				gem.WithStrikethrough(gem.StrikethroughUnicode),
-			)
-		case 'h':
-			gemOptions = append(gemOptions, gem.WithHeadingSpace(gem.HeadingSpaceSingle))
-		case 'H':
-			switch opt.Value {
-			case "auto":
-			case "off":
-				gemOptions = append(gemOptions, gem.WithHeadingLink(gem.HeadingLinkOff))
-			case "below":
-				gemOptions = append(gemOptions, gem.WithHeadingLink(gem.HeadingLinkBelow))
-			default:
-				log.Println("unknown link mode")
-				usage()
-			}
-		case 'P':
-			switch opt.Value {
-			case "off":
-				gemOptions = append(gemOptions, gem.WithParagraphLink(gem.ParagraphLinkOff))
-			case "below":
-				gemOptions = append(gemOptions, gem.WithParagraphLink(gem.ParagraphLinkBelow))
-			default:
-				log.Println("unknown link mode")
-				usage()
-			}
-		}
-	}
-
-	// load markdown
-	src, err := io.ReadAll(inputBytes)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// attach gemtext renderer
-	md.SetRenderer(gem.New(gemOptions...))
-
 	// render
+	md.SetRenderer(gem.New(opts...))
 	if err := md.Convert([]byte(src), &buf); err != nil {
-		log.Fatal(err)
+		return err
 	}
 	io.Copy(os.Stdout, &buf)
+	return nil
 }
