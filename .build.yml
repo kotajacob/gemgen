@@ -1,6 +1,6 @@
-image: debian/stable
+image: openbsd/latest
 packages:
-  - golang
+  - go
 sources:
   - https://git.sr.ht/~kota/gemgen
 tasks:
