@@ -5,30 +5,14 @@ to [Gemtext](https://gemini.circumlunar.space/docs/gemtext.gmi). Gemgen uses the
 [goldmark](https://pkg.go.dev/github.com/yuin/goldmark) markdown parser and [my
 gemtext rendering module](https://git.sr.ht/~kota/goldmark-gemtext/).
 
-The goal is to create proper _hand-made_ gemtext. Links and "autolinks" are
-placed below each paragraph, but a "paragraph" of **only** links is left intact.
-Normally, paragraphs are merged onto a single line, but hardlinks (double spaces
-or \ at the end of a line) may be used for manual line breaks. Lists and
-headings are simplified to the gemtext format, emphasis markings are removed (or
-kept with the `-e` flag), horizontal rules are turned into 80 character lines,
-and indented code is converted to the gemtext "fenced" format.
-
-## Usage
-
-```
-gemgen [-v | -e | -E | -h] [-H linkmode]
--v : Print version and exit.
--e : Print markdown emphasis symbols for bold, italics, inline code, and strikethrough.
--E : Print unicode symbols for 𝗯𝗼𝗹𝗱, 𝘪𝘵𝘢𝘭𝘪𝘤, and s̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶.
--h : Disable blank lines after headings.
--H : Specify a heading link mode.
-	off : Ignore links in headings; writing the label of the link in it's place.
-	auto: If the heading contains on links, use the first link instead of printing a heading. Otherwise print a heading, ignoreing links.
-	below: Print all links below headings.
--P : Specify a paragraph link mode.
-	off : Ignore links in paragraphs; writing the label of the link in it's place.
-	below: Print all links below paragraph.
-```
+The goal is to create proper _hand-made_ gemtext. Links and "autolinks" get
+placed below each paragraph, but a list of links is not printed twice.
+Paragraphs get merged onto a single line, but hardlinks (double spaces or \ at
+the end of a line) will insert manual line breaks. Lists and headings get
+simplified to the gemtext format, emphasis markings get removed (or kept with
+the `-e` option), horizontal rules get turned into 80 character lines, and
+indented code gets converted to the gemtext "fenced" format. For exact usage
+information see `man gemgen` or `gemgen -h` for quick help.
 
 ## Packages
 
