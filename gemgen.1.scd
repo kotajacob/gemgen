@@ -29,7 +29,7 @@ indented code gets converted to the gemtext "fenced" format.
 		Print markdown emphasis symbols for bold, italics, inline code, and
 		strikethrough.
 	*-E*
-		Print unicode symbols for 𝗯𝗼𝗹𝗱, 𝘪𝘵𝘢𝘭𝘪𝘤, and s̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶.
+		Print unicode symbols for bold, italics, and strikethrough.
 	*-h*
 		Disable blank lines after headings.
 	*-H*
