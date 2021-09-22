@@ -12,6 +12,8 @@ import (
 	"github.com/yuin/goldmark/extension"
 )
 
+// Version is a semantic version for gemgen. It is set externally at build time
+// from the Makefile.
 var Version string
 
 func main() {
@@ -49,7 +51,7 @@ func options() []gem.Option {
 	flag.Parse()
 
 	// use command line flags to create parser options
-	if *versionFlag == true {
+	if *versionFlag {
 		log.Println("gemgen v" + Version)
 		os.Exit(0)
 	}
@@ -71,7 +73,7 @@ func options() []gem.Option {
 		)
 	}
 
-	if *headingNewlineFlag == true {
+	if *headingNewlineFlag {
 		gemOptions = append(gemOptions, gem.WithHeadingSpace(gem.HeadingSpaceSingle))
 	}
 
