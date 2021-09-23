@@ -77,10 +77,9 @@ func options(progname string, args []string) (options []gem.Option, output strin
 	}
 
 	switch *paragraphLinkFlag {
+	case "below":
 	case "off":
 		options = append(options, gem.WithParagraphLink(gem.ParagraphLinkOff))
-	case "below":
-		options = append(options, gem.WithParagraphLink(gem.ParagraphLinkBelow))
 	default:
 		log.Println("unknown link mode")
 	}
