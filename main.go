@@ -1,16 +1,11 @@
 package main
 
 import (
-	"bytes"
-	"io"
 	"log"
 	"os"
 	"sync"
 
-	gem "git.sr.ht/~kota/goldmark-gemtext"
 	flag "github.com/spf13/pflag"
-	"github.com/yuin/goldmark"
-	"github.com/yuin/goldmark/extension"
 )
 
 // Version is a semantic version for gemgen. It is set externally at build time
@@ -34,11 +29,7 @@ func main() {
 
 	// use stdin if no files were given
 	if opts.Names == nil {
-		src, err := io.ReadAll(os.Stdin)
-		if err != nil {
-			log.Fatalf("failed reading STDIN: %v\n", err)
-		}
-		err = convertFile(&src, opts.GemOptions)
+		err = convert(os.Stdin, os.Stdout, opts.GemOptions)
 		if err != nil {
 			log.Fatalf("failed converting STDIN: %v\n", err)
 		}
@@ -52,35 +43,16 @@ func main() {
 		go func(name string) {
 			// decrement the counter when the goroutine completes
 			defer wg.Done()
-			src, err := os.ReadFile(name)
+			// read input file
+			src, err := os.Open(name)
 			if err != nil {
 				log.Fatalf("failed reading file %s: %v\n", name, err)
 			}
-			err = convertFile(&src, opts.GemOptions)
+			err = convert(src, os.Stdout, opts.GemOptions)
 			if err != nil {
 				log.Fatalf("failed converting file %s: %v\n", name, err)
 			}
 		}(name)
 	}
 	wg.Wait()
-}
-
-// convertFile reads the file and converts it to gemtext using opts.
-func convertFile(file *[]byte, opts []gem.Option) error {
-	// create markdown parser
-	var buf bytes.Buffer
-	md := goldmark.New(
-		goldmark.WithExtensions(
-			extension.Linkify,
-			extension.Strikethrough,
-		),
-	)
-
-	// render
-	md.SetRenderer(gem.New(opts...))
-	if err := md.Convert([]byte(*file), &buf); err != nil {
-		return err
-	}
-	io.Copy(os.Stdout, &buf)
-	return nil
 }
