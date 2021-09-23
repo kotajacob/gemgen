@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"sync"
 
 	gem "git.sr.ht/~kota/goldmark-gemtext"
 	flag "github.com/spf13/pflag"
@@ -21,7 +22,7 @@ func main() {
 	log.SetFlags(0)
 
 	// get options
-	opts, output, err := options(os.Args[0], os.Args[1:])
+	opts, names, output, err := options(os.Args[0], os.Args[1:])
 	if err == flag.ErrHelp {
 		log.Println(output)
 		os.Exit(0)
@@ -31,19 +32,41 @@ func main() {
 		os.Exit(1)
 	}
 
-	// load markdown
-	src, err := io.ReadAll(os.Stdin)
-	if err != nil {
-		log.Fatal(err)
+	// use stdin if no files were given
+	if names == nil {
+		src, err := io.ReadAll(os.Stdin)
+		if err != nil {
+			log.Fatalf("failed reading STDIN: %v\n", err)
+		}
+		err = convertFile(&src, opts)
+		if err != nil {
+			log.Fatalf("failed converting STDIN: %v\n", err)
+		}
+		os.Exit(0)
 	}
 
-	// render
-	if err := render(src, opts); err != nil {
-		log.Fatal(err)
+	// read and convert the list of files concurrently
+	var wg sync.WaitGroup
+	for _, name := range names {
+		wg.Add(1)
+		go func(name string) {
+			// decrement the counter when the goroutine completes
+			defer wg.Done()
+			src, err := os.ReadFile(name)
+			if err != nil {
+				log.Fatalf("failed reading file %s: %v\n", name, err)
+			}
+			err = convertFile(&src, opts)
+			if err != nil {
+				log.Fatalf("failed converting file %s: %v\n", name, err)
+			}
+		}(name)
 	}
+	wg.Wait()
 }
 
-func render(src []byte, opts []gem.Option) error {
+// convertFile reads the file and converts it to gemtext using opts.
+func convertFile(file *[]byte, opts []gem.Option) error {
 	// create markdown parser
 	var buf bytes.Buffer
 	md := goldmark.New(
@@ -55,7 +78,7 @@ func render(src []byte, opts []gem.Option) error {
 
 	// render
 	md.SetRenderer(gem.New(opts...))
-	if err := md.Convert([]byte(src), &buf); err != nil {
+	if err := md.Convert([]byte(*file), &buf); err != nil {
 		return err
 	}
 	io.Copy(os.Stdout, &buf)
