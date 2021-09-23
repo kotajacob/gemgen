@@ -41,7 +41,7 @@ func TestOptions(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(strings.Join(tt.args, " "), func(t *testing.T) {
-			opts, _, output, err := options("gemgen", tt.args)
+			opts, output, err := parseArgs("gemgen", tt.args)
 			if err != nil {
 				t.Errorf("err got %v, want nil", err)
 			}
@@ -53,7 +53,7 @@ func TestOptions(t *testing.T) {
 				opt.SetConfig(want)
 			}
 			got := gem.NewConfig()
-			for _, opt := range *opts {
+			for _, opt := range opts.GemOptions {
 				opt.SetConfig(got)
 			}
 			if diff := cmp.Diff(want, got); diff != "" {

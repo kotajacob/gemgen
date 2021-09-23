@@ -22,7 +22,7 @@ func main() {
 	log.SetFlags(0)
 
 	// get options
-	opts, names, output, err := options(os.Args[0], os.Args[1:])
+	opts, output, err := parseArgs(os.Args[0], os.Args[1:])
 	if err == flag.ErrHelp {
 		log.Println(output)
 		os.Exit(0)
@@ -33,12 +33,12 @@ func main() {
 	}
 
 	// use stdin if no files were given
-	if names == nil {
+	if opts.Names == nil {
 		src, err := io.ReadAll(os.Stdin)
 		if err != nil {
 			log.Fatalf("failed reading STDIN: %v\n", err)
 		}
-		err = convertFile(&src, opts)
+		err = convertFile(&src, opts.GemOptions)
 		if err != nil {
 			log.Fatalf("failed converting STDIN: %v\n", err)
 		}
@@ -47,7 +47,7 @@ func main() {
 
 	// read and convert the list of files concurrently
 	var wg sync.WaitGroup
-	for _, name := range *names {
+	for _, name := range opts.Names {
 		wg.Add(1)
 		go func(name string) {
 			// decrement the counter when the goroutine completes
@@ -56,7 +56,7 @@ func main() {
 			if err != nil {
 				log.Fatalf("failed reading file %s: %v\n", name, err)
 			}
-			err = convertFile(&src, opts)
+			err = convertFile(&src, opts.GemOptions)
 			if err != nil {
 				log.Fatalf("failed converting file %s: %v\n", name, err)
 			}
@@ -66,7 +66,7 @@ func main() {
 }
 
 // convertFile reads the file and converts it to gemtext using opts.
-func convertFile(file *[]byte, opts *[]gem.Option) error {
+func convertFile(file *[]byte, opts []gem.Option) error {
 	// create markdown parser
 	var buf bytes.Buffer
 	md := goldmark.New(
@@ -77,7 +77,7 @@ func convertFile(file *[]byte, opts *[]gem.Option) error {
 	)
 
 	// render
-	md.SetRenderer(gem.New(*opts...))
+	md.SetRenderer(gem.New(opts...))
 	if err := md.Convert([]byte(*file), &buf); err != nil {
 		return err
 	}
