@@ -30,6 +30,10 @@ func TestOptions(t *testing.T) {
 			[]gem.Option{gem.WithHeadingLink(gem.HeadingLinkOff)},
 		},
 		{
+			[]string{"-a", "below"},
+			[]gem.Option{gem.WithHeadingLink(gem.HeadingLinkBelow)},
+		},
+		{
 			[]string{"-p", "off"},
 			[]gem.Option{gem.WithParagraphLink(gem.ParagraphLinkOff)},
 		},
