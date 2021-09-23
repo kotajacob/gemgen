@@ -1,5 +1,7 @@
 # gemgen - Markdown to Gemtext
 
+[![builds.sr.ht status](https://builds.sr.ht/~kota/gemgen.svg)](https://builds.sr.ht/~kota/gemgen)
+
 Command line tool for converting [Commonmark Markdown](https://commonmark.org/)
 to [Gemtext](https://gemini.circumlunar.space/docs/gemtext.gmi). Gemgen uses the
 [goldmark](https://pkg.go.dev/github.com/yuin/goldmark) markdown parser and [my
