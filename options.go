@@ -17,7 +17,7 @@ import (
 // output.
 // A special case is usage requests with -h or -help: then the error
 // flag.ErrHelp is returned and output will contain the usage message.
-func options(progname string, args []string) (opts []gem.Option, files []string, output string, err error) {
+func options(progname string, args []string) (*[]gem.Option, *[]string, string, error) {
 	// setup flagset
 	flag := flag.NewFlagSet(progname, flag.ContinueOnError)
 	var buf bytes.Buffer
@@ -41,17 +41,18 @@ func options(progname string, args []string) (opts []gem.Option, files []string,
 	off   : ignore links in paragraphs`)
 	headingNewlineFlag := flag.BoolP("heading-newline", "A", false, `disable printing a newline below each heading`)
 
-	err = flag.Parse(args)
+	err := flag.Parse(args)
 	if err != nil {
 		return nil, nil, buf.String(), err
 	}
-	files = flag.Args()
+	files := flag.Args()
 	if *versionFlag {
 		log.Println("gemgen v" + Version)
 		os.Exit(0)
 	}
 
 	// create gemtext options from flags
+	var opts []gem.Option
 	switch *emphasisFlag {
 	case "none":
 	case "markdown":
@@ -90,5 +91,5 @@ func options(progname string, args []string) (opts []gem.Option, files []string,
 	default:
 		log.Println("unknown link mode")
 	}
-	return opts, files, buf.String(), nil
+	return &opts, &files, buf.String(), nil
 }

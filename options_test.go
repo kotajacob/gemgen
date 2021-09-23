@@ -49,7 +49,7 @@ func TestOptions(t *testing.T) {
 				opt.SetConfig(want)
 			}
 			got := gem.NewConfig()
-			for _, opt := range opts {
+			for _, opt := range *opts {
 				opt.SetConfig(got)
 			}
 			if diff := cmp.Diff(want, got); diff != "" {

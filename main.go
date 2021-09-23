@@ -47,7 +47,7 @@ func main() {
 
 	// read and convert the list of files concurrently
 	var wg sync.WaitGroup
-	for _, name := range names {
+	for _, name := range *names {
 		wg.Add(1)
 		go func(name string) {
 			// decrement the counter when the goroutine completes
@@ -66,7 +66,7 @@ func main() {
 }
 
 // convertFile reads the file and converts it to gemtext using opts.
-func convertFile(file *[]byte, opts []gem.Option) error {
+func convertFile(file *[]byte, opts *[]gem.Option) error {
 	// create markdown parser
 	var buf bytes.Buffer
 	md := goldmark.New(
@@ -77,7 +77,7 @@ func convertFile(file *[]byte, opts []gem.Option) error {
 	)
 
 	// render
-	md.SetRenderer(gem.New(opts...))
+	md.SetRenderer(gem.New(*opts...))
 	if err := md.Convert([]byte(*file), &buf); err != nil {
 		return err
 	}
