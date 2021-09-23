@@ -17,7 +17,7 @@ import (
 // output.
 // A special case is usage requests with -h or -help: then the error
 // flag.ErrHelp is returned and output will contain the usage message.
-func options(progname string, args []string) (options []gem.Option, files []string, output string, err error) {
+func options(progname string, args []string) (opts []gem.Option, files []string, output string, err error) {
 	// setup flagset
 	flag := flag.NewFlagSet(progname, flag.ContinueOnError)
 	var buf bytes.Buffer
@@ -55,30 +55,30 @@ func options(progname string, args []string) (options []gem.Option, files []stri
 	switch *emphasisFlag {
 	case "none":
 	case "markdown":
-		options = append(
-			options,
+		opts = append(
+			opts,
 			gem.WithEmphasis(gem.EmphasisMarkdown),
 			gem.WithCodeSpan(gem.CodeSpanMarkdown),
 			gem.WithStrikethrough(gem.StrikethroughMarkdown),
 		)
 	case "unicode":
-		options = append(
-			options,
+		opts = append(
+			opts,
 			gem.WithEmphasis(gem.EmphasisUnicode),
 			gem.WithStrikethrough(gem.StrikethroughUnicode),
 		)
 	}
 
 	if *headingNewlineFlag {
-		options = append(options, gem.WithHeadingSpace(gem.HeadingSpaceSingle))
+		opts = append(opts, gem.WithHeadingSpace(gem.HeadingSpaceSingle))
 	}
 
 	switch *headingLinkFlag {
 	case "auto":
 	case "off":
-		options = append(options, gem.WithHeadingLink(gem.HeadingLinkOff))
+		opts = append(opts, gem.WithHeadingLink(gem.HeadingLinkOff))
 	case "below":
-		options = append(options, gem.WithHeadingLink(gem.HeadingLinkBelow))
+		opts = append(opts, gem.WithHeadingLink(gem.HeadingLinkBelow))
 	default:
 		log.Println("unknown link mode")
 	}
@@ -86,9 +86,9 @@ func options(progname string, args []string) (options []gem.Option, files []stri
 	switch *paragraphLinkFlag {
 	case "below":
 	case "off":
-		options = append(options, gem.WithParagraphLink(gem.ParagraphLinkOff))
+		opts = append(opts, gem.WithParagraphLink(gem.ParagraphLinkOff))
 	default:
 		log.Println("unknown link mode")
 	}
-	return options, files, buf.String(), nil
+	return opts, files, buf.String(), nil
 }
