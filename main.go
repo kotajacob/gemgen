@@ -21,7 +21,15 @@ func main() {
 	log.SetFlags(0)
 
 	// get options
-	opts := options()
+	opts, output, err := options(os.Args[0], os.Args[1:])
+	if err == flag.ErrHelp {
+		log.Println(output)
+		os.Exit(0)
+	} else if err != nil {
+		log.Println("got error:", err)
+		log.Println("output:\n", output)
+		os.Exit(1)
+	}
 
 	// load markdown
 	src, err := io.ReadAll(os.Stdin)
@@ -33,69 +41,6 @@ func main() {
 	if err := render(src, opts); err != nil {
 		log.Fatal(err)
 	}
-}
-
-func options() []gem.Option {
-	versionFlag := flag.BoolP("version", "v", false, "print version and exit")
-	emphasisFlag := flag.StringP("emphasis", "e", "none", `representation of bold, italics, inline code, and strikethrough
-	none     : do not print emphasis marks
-	markdown : print markdown style emphasis marks`)
-	headingLinkFlag := flag.StringP("heading-links", "a", "auto", `specify how links in headings are printed
-	auto  : print link-only headings as links
-	below : print links in headings below the heading
-	off   : ignore links in headings`)
-	paragraphLinkFlag := flag.StringP("paragraph-links", "p", "below", `specify how links in paragraphs are printed
-	below : print links in paragraphs below the paragraph
-	off   : ignore links in paragraphs`)
-	headingNewlineFlag := flag.BoolP("heading-newline", "A", false, `disable printing a newline below each heading`)
-	flag.Parse()
-
-	// use command line flags to create parser options
-	if *versionFlag {
-		log.Println("gemgen v" + Version)
-		os.Exit(0)
-	}
-	var gemOptions []gem.Option
-	switch *emphasisFlag {
-	case "none":
-	case "markdown":
-		gemOptions = append(
-			gemOptions,
-			gem.WithEmphasis(gem.EmphasisMarkdown),
-			gem.WithCodeSpan(gem.CodeSpanMarkdown),
-			gem.WithStrikethrough(gem.StrikethroughMarkdown),
-		)
-	case "unicode":
-		gemOptions = append(
-			gemOptions,
-			gem.WithEmphasis(gem.EmphasisUnicode),
-			gem.WithStrikethrough(gem.StrikethroughUnicode),
-		)
-	}
-
-	if *headingNewlineFlag {
-		gemOptions = append(gemOptions, gem.WithHeadingSpace(gem.HeadingSpaceSingle))
-	}
-
-	switch *headingLinkFlag {
-	case "auto":
-	case "off":
-		gemOptions = append(gemOptions, gem.WithHeadingLink(gem.HeadingLinkOff))
-	case "below":
-		gemOptions = append(gemOptions, gem.WithHeadingLink(gem.HeadingLinkBelow))
-	default:
-		log.Println("unknown link mode")
-	}
-
-	switch *paragraphLinkFlag {
-	case "off":
-		gemOptions = append(gemOptions, gem.WithParagraphLink(gem.ParagraphLinkOff))
-	case "below":
-		gemOptions = append(gemOptions, gem.WithParagraphLink(gem.ParagraphLinkBelow))
-	default:
-		log.Println("unknown link mode")
-	}
-	return gemOptions
 }
 
 func render(src []byte, opts []gem.Option) error {
