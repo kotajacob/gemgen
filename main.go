@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"os"
-	"sync"
 
 	flag "github.com/spf13/pflag"
 )
@@ -36,23 +35,6 @@ func main() {
 		os.Exit(0)
 	}
 
-	// read and convert the list of files concurrently
-	var wg sync.WaitGroup
-	for _, name := range opts.Names {
-		wg.Add(1)
-		go func(name string) {
-			// decrement the counter when the goroutine completes
-			defer wg.Done()
-			// read input file
-			src, err := os.Open(name)
-			if err != nil {
-				log.Fatalf("failed reading file %s: %v\n", name, err)
-			}
-			err = convert(src, os.Stdout, opts.GemOptions)
-			if err != nil {
-				log.Fatalf("failed converting file %s: %v\n", name, err)
-			}
-		}(name)
-	}
-	wg.Wait()
+	// (otherwise) convert named files
+	convertFiles(opts)
 }
