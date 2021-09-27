@@ -15,14 +15,14 @@ func main() {
 	log.SetPrefix("")
 	log.SetFlags(0)
 
-	// get options
-	opts, output, err := parseArgs(os.Args[0], os.Args[1:])
+	// parse arguments
+	opts, usage, err := parseArgs(os.Args[0], os.Args[1:])
 	if err == flag.ErrHelp {
-		log.Println(output)
+		log.Println(usage)
 		os.Exit(0)
 	} else if err != nil {
 		log.Println("got error:", err)
-		log.Println("output:\n", output)
+		log.Println("output:\n", usage)
 		os.Exit(1)
 	}
 

@@ -12,16 +12,19 @@ import (
 
 // Opts represents options selected from command line flags.
 type Opts struct {
-	// GemOptions contains options for goldmark-gemtext
+	// GemOptions contains options for goldmark-gemtext.
 	GemOptions []gem.Option
-	// Names of files to convert
+	// Names of files to convert.
 	Names []string
+	// Output specifies where to write gemtext files.
+	// If output is blank gemtext files will be written in the source folder.
+	Output string
 }
 
 // parseArgs parses the command-line arguments provided to the program.
 // Typically os.Args[0] is provided as 'progname' and os.Args[1:] as 'args'.
-// Returns Opts in case parsing succeeded, or an error. In any case, the output
-// of the flag.Parse is returned.
+// Returns Opts in case parsing succeeded, or an error. In any case, the usage
+// text of the flag.Parse is returned.
 // A special case is usage requests with -h or -help: then the error
 // flag.ErrHelp is returned and output will contain the usage message.
 func parseArgs(progname string, args []string) (*Opts, string, error) {
@@ -36,6 +39,7 @@ func parseArgs(progname string, args []string) (*Opts, string, error) {
 
 	// define flags
 	versionFlag := flag.BoolP("version", "v", false, "print version and exit")
+	outputFlag := flag.StringP("output", "o", "", "directory to write gemtext files")
 	emphasisFlag := flag.StringP("emphasis", "e", "none", `representation of bold, italics, inline code, and strikethrough
 	none     : do not print emphasis marks
 	markdown : print markdown style emphasis marks`)
@@ -58,6 +62,9 @@ func parseArgs(progname string, args []string) (*Opts, string, error) {
 		log.Println("gemgen v" + Version)
 		os.Exit(0)
 	}
+
+	// set output location
+	opts.Output = *outputFlag
 
 	// create gemtext options from flags
 	switch *emphasisFlag {
