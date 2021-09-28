@@ -6,7 +6,7 @@ gemgen - Markdown to Gemtext
 
 # SYNOPSIS
 
-*gemgen [OPTION]... [FILE]...*
+_gemgen_ [OPTION]... [FILE]...
 
 # DESCRIPTION
 
@@ -23,28 +23,40 @@ indented code gets converted to the gemtext "fenced" format.
 
 # OPTIONS
 
-	*-v*
-		Print version and exit.
-	*-o, --output directory*
-		Directory to write gemtext files.
-	*-e, --emphasis mode*
-		Representation of bold, italics, inline code, and strikethrough.
-			*none*      Do not print emphasis marks.
-			*markdown*  Print markdown style emphasis marks.
-	*-A, --heading-newline*
-		Disable blank lines after headings.
-	*-a, --heading-links mode*
-		Specify a heading link mode.
-			*off*   Ignore links in headings; writing the label of the link in it's
-				place.
-			*auto*  If the heading contains on links, use the first link instead of
-				printing a heading. Otherwise print a heading, ignoreing links.
-			*below* Print all links below headings.
-	*-p, --paragraph-links mode*
-		Specify a paragraph link mode.
-			*off*   Ignore links in paragraphs; writing the label of the link in it's
-				place.
-			*below* Print all links below paragraph.
+*-v*
+	Print version and exit.
+
+*-o, --output directory*
+	Directory to write gemtext files.
+
+*-e, --emphasis mode*
+	Representation of bold, italics, inline code, and strikethrough.
+
+	*none* : Do not print emphasis marks.
+
+	*markdown* : Print markdown style emphasis marks.
+
+*-A, --heading-newline*
+	Disable blank lines after headings.
+
+*-a, --heading-links mode*
+	Specify a heading link mode.
+
+	*off* : Ignore links in headings; writing the label of the link in it's
+	place.
+
+	*auto* : If the heading contains on links, use the first link instead of
+	printing a heading. Otherwise print a heading, ignoreing links.
+
+	*below* : Print all links below headings.
+
+*-p, --paragraph-links mode*
+	Specify a paragraph link mode.
+
+	*off* : Ignore links in paragraphs; writing the label of the link in it's
+	place.
+
+	*below* : Print all links below paragraph.
 
 # AUTHORS
 
