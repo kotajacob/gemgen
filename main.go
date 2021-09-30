@@ -21,8 +21,10 @@ func main() {
 		log.Println(usage)
 		os.Exit(0)
 	} else if err != nil {
-		log.Println("got error:", err)
-		log.Println("output:\n", usage)
+		log.Println("error:", err)
+		if usage != "" {
+			log.Println("output:", usage)
+		}
 		os.Exit(1)
 	}
 
