@@ -15,7 +15,7 @@ func main() {
 	log.SetPrefix("")
 	log.SetFlags(0)
 
-	// parse arguments
+	// Parse arguments.
 	opts, usage, err := parseArgs(os.Args[0], os.Args[1:])
 	if err == flag.ErrHelp {
 		log.Println(usage)
@@ -28,7 +28,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	// use stdin if no files were given
+	// Use stdin if no filenames were given.
 	if opts.Names == nil {
 		err = convert(os.Stdin, os.Stdout, opts.GemOptions)
 		if err != nil {
@@ -37,6 +37,6 @@ func main() {
 		os.Exit(0)
 	}
 
-	// (otherwise) convert named files
+	// Convert named files.
 	convertFiles(opts)
 }
