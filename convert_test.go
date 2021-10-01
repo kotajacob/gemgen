@@ -16,6 +16,7 @@ func setupData(count int) (afero.Fs, *Opts, error) {
 	}
 	fs := afero.NewMemMapFs()
 	fs.Mkdir("md", 0755)
+	fs.Mkdir("gmi", 0755)
 	var opts Opts
 	opts.Names = make([]string, 0, count)
 	// Create count files with test data under md/
@@ -45,6 +46,13 @@ func TestConvertFiles(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	// Convert without output directory.
+	err = convertFiles(fs, opts)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Convert with output directory.
+	opts.Output = "gmi/"
 	err = convertFiles(fs, opts)
 	if err != nil {
 		t.Fatal(err)
