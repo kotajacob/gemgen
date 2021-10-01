@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/spf13/afero"
 	flag "github.com/spf13/pflag"
 )
 
@@ -38,5 +39,6 @@ func main() {
 	}
 
 	// Convert named files.
-	convertFiles(opts)
+	fs := afero.NewOsFs()
+	convertFiles(fs, opts)
 }
