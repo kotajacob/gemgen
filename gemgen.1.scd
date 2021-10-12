@@ -29,6 +29,9 @@ indented code gets converted to the gemtext "fenced" format.
 *-o, --output directory*
 	Directory to write gemtext files.
 
+*-t templates*
+	Input file matching patterns and templates. See *TEMPLATES* for details.
+
 *-e, --emphasis mode*
 	Representation of bold, italics, inline code, and strikethrough.
 
@@ -57,6 +60,38 @@ indented code gets converted to the gemtext "fenced" format.
 	place.
 
 	*below* : Print all links below paragraph.
+
+# TEMPLATES
+
+Gemgen provides a mechanism for creating templates to add footers, headers, and
+include metadata in your gemtext output files. You can specify any number of
+template files with regular expression patterns to match them against your input
+files. Only the "most specific" template will be applied to each input file.
+
+For example, you can have a "catch all" template and another more specific
+template that only matches a file named "index.md".
+
+; NOTE: scdoc interprets \ inside ``` so we must double them!
+```
+gemgen -t '.+\\.md,main.tmpl,index\\.md,index.tmpl' file.md index.md
+```
+
+The regular expression syntax follows the RE2 standard. It should be very
+familiar if you're used PCRE or python regular expressions. An exact definition
+of the syntax accepted is described at https://golang.org/s/re2syntax, except
+for \\C.
+
+Gemgen uses Go's text/template library for the basis of templating. A template
+is is UTF-8-encoded text containing "Actions"--data evaluations or control
+structures--are delimited by "{{" and "}}". Currently, only one action,
+{{.Content}} is implemented, but more will be created as needed. Below is an
+example template that adds a header link to the top of your output files.
+
+```
+=> /index.gmi My Fancy Gemini Capsule
+
+{{.Content}}
+```
 
 # AUTHORS
 

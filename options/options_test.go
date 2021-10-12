@@ -1,4 +1,4 @@
-package main
+package options
 
 import (
 	"strings"
@@ -41,7 +41,7 @@ func TestOptions(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(strings.Join(tt.args, " "), func(t *testing.T) {
-			opts, output, err := parseArgs("gemgen", tt.args)
+			opts, output, err := ParseArgs("gemgen", tt.args)
 			if err != nil {
 				t.Errorf("err got %v, want nil", err)
 			}

@@ -6,10 +6,12 @@ import (
 	"strconv"
 	"testing"
 
+	"git.sr.ht/~kota/gemgen/matchtemplate"
+	"git.sr.ht/~kota/gemgen/options"
 	"github.com/spf13/afero"
 )
 
-func setupData(count int) (afero.Fs, *Opts, error) {
+func setupData(count int) (afero.Fs, *options.Opts, error) {
 	data, err := os.ReadFile("test.md")
 	if err != nil {
 		return nil, nil, err
@@ -17,7 +19,7 @@ func setupData(count int) (afero.Fs, *Opts, error) {
 	fs := afero.NewMemMapFs()
 	fs.Mkdir("md", 0755)
 	fs.Mkdir("gmi", 0755)
-	var opts Opts
+	var opts options.Opts
 	opts.Names = make([]string, 0, count)
 	// Create count files with test data under md/
 	for i := 0; i < count; i++ {
@@ -46,14 +48,16 @@ func TestConvertFiles(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	mt := new(matchtemplate.MatchedTemplates)
+
 	// Convert without output directory.
-	err = convertFiles(fs, opts)
+	err = ConvertFiles(fs, opts, mt)
 	if err != nil {
 		t.Fatal(err)
 	}
 	// Convert with output directory.
 	opts.Output = "gmi/"
-	err = convertFiles(fs, opts)
+	err = ConvertFiles(fs, opts, mt)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -65,22 +69,26 @@ func BenchmarkConvertFiles100(b *testing.B) {
 	if err != nil {
 		b.Fatal(err)
 	}
+	mt := new(matchtemplate.MatchedTemplates)
+
 	for i := 0; i < b.N; i++ {
-		err = convertFiles(fs, opts)
+		err = ConvertFiles(fs, opts, mt)
 		if err != nil {
 			b.Fatal(err)
 		}
 	}
 }
 
-func BenchmarkConvertFiles100000(b *testing.B) {
+func BenchmarkConvertFiles50000(b *testing.B) {
 	// create 100 test markdown files
-	fs, opts, err := setupData(100000)
+	fs, opts, err := setupData(50000)
 	if err != nil {
 		b.Fatal(err)
 	}
+	mt := new(matchtemplate.MatchedTemplates)
+
 	for i := 0; i < b.N; i++ {
-		err = convertFiles(fs, opts)
+		err = ConvertFiles(fs, opts, mt)
 		if err != nil {
 			b.Fatal(err)
 		}

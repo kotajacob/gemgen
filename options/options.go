@@ -1,7 +1,8 @@
-package main
+package options
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -9,6 +10,8 @@ import (
 	gem "git.sr.ht/~kota/goldmark-gemtext"
 	flag "github.com/spf13/pflag"
 )
+
+var ErrVersion = errors.New("version requested")
 
 // Opts represents options selected from command line flags.
 type Opts struct {
@@ -19,15 +22,22 @@ type Opts struct {
 	// Output specifies where to write gemtext files.
 	// If output is blank gemtext files will be written in the source folder.
 	Output string
+	// TemplateArgs is an even slice of strings.
+	// Every even string (starting at 0) should be a regular expression for
+	// matching input filenames. Every odd string should be a filepath to a
+	// loadable template file.
+	// TemplateArgs should be parsed into a matchedTemplates.
+	TemplateArgs []string
 }
 
-// parseArgs parses the command-line arguments provided to the program.
+// ParseArgs parses the command-line arguments provided to the program.
 // Typically os.Args[0] is provided as 'progname' and os.Args[1:] as 'args'.
 // Returns Opts in case parsing succeeded, or an error. In any case, the usage
 // text of the flag.Parse is returned.
 // A special case is usage requests with -h or -help: then the error
 // flag.ErrHelp is returned and output will contain the usage message.
-func parseArgs(progname string, args []string) (*Opts, string, error) {
+// Another special case is version in which the error will be ErrVersion.
+func ParseArgs(progname string, args []string) (*Opts, string, error) {
 	// setup flagset
 	flag := flag.NewFlagSet(progname, flag.ContinueOnError)
 	var buf bytes.Buffer
@@ -40,6 +50,7 @@ func parseArgs(progname string, args []string) (*Opts, string, error) {
 	// define flags
 	versionFlag := flag.BoolP("version", "v", false, "print version and exit")
 	outputFlag := flag.StringP("output", "o", "", "directory to write gemtext files")
+	templateFlag := flag.StringSliceP("template", "t", nil, "specify templates with a regular expression matching input filenames\n\tuse the form \"pattern,/path/to/template\"")
 	emphasisFlag := flag.StringP("emphasis", "e", "none", `representation of bold, italics, inline code, and strikethrough
 	none     : do not print emphasis marks
 	markdown : print markdown style emphasis marks`)
@@ -59,12 +70,12 @@ func parseArgs(progname string, args []string) (*Opts, string, error) {
 	var opts Opts
 	opts.Names = flag.Args()
 	if *versionFlag {
-		log.Println("gemgen v" + Version)
-		os.Exit(0)
+		return nil, "", ErrVersion
 	}
 
-	// set output location
+	// set output and templates
 	opts.Output = *outputFlag
+	opts.TemplateArgs = *templateFlag
 
 	// create gemtext options from flags
 	switch *emphasisFlag {

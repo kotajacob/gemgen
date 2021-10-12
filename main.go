@@ -1,9 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
+	"git.sr.ht/~kota/gemgen/matchtemplate"
+	"git.sr.ht/~kota/gemgen/options"
 	"github.com/spf13/afero"
 	flag "github.com/spf13/pflag"
 )
@@ -17,9 +20,12 @@ func main() {
 	log.SetFlags(0)
 
 	// Parse arguments.
-	opts, usage, err := parseArgs(os.Args[0], os.Args[1:])
+	opts, usage, err := options.ParseArgs(os.Args[0], os.Args[1:])
 	if err == flag.ErrHelp {
 		log.Println(usage)
+		os.Exit(0)
+	} else if err == options.ErrVersion {
+		log.Println("gemgen v" + Version)
 		os.Exit(0)
 	} else if err != nil {
 		log.Println("error:", err)
@@ -31,14 +37,21 @@ func main() {
 
 	// Use stdin if no filenames were given.
 	if opts.Names == nil {
-		err = convert(os.Stdin, os.Stdout, opts.GemOptions)
+		err = Convert(os.Stdin, os.Stdout, opts.GemOptions)
 		if err != nil {
 			log.Fatalf("failed converting STDIN: %v\n", err)
 		}
 		os.Exit(0)
 	}
 
+	// Load templates.
+	mt := new(matchtemplate.MatchedTemplates)
+	if err := mt.Parse(opts); err != nil {
+		log.Fatalf("failed parsing templates: %v\n", err)
+	}
+	fmt.Println(mt)
+
 	// Convert named files.
 	fs := afero.NewOsFs()
-	convertFiles(fs, opts)
+	ConvertFiles(fs, opts, mt)
 }
