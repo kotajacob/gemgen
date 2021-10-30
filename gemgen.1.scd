@@ -83,15 +83,45 @@ for \\C.
 
 Gemgen uses Go's text/template library for the basis of templating. A template
 is is UTF-8-encoded text containing "Actions"--data evaluations or control
-structures--are delimited by "{{" and "}}". Currently, only one action,
-{{.Content}} is implemented, but more will be created as needed. Below is an
-example template that adds a header link to the top of your output files.
+structures--are delimited by "{{" and "}}". Several actions exist to add basic
+metadata to your output files. Below is an example template that adds a header
+link to the top of your output files (using the {{.Content}} action to print the
+converted gemtext.
 
 ```
 => /index.gmi My Fancy Gemini Capsule
 
 {{.Content}}
 ```
+
+Here's a slightly more complicated template that prints a title (based on the
+filename) and the original filename with a last edit timestamp.
+
+```
+{{.Title}}
+{{.Filename}} last edited: {{.LastEdit}}
+
+{{.Content}}
+```
+
+## ACTIONS
+
+*{{.Content}}*
+	Full converted gemtext data of the source file.
+
+*{{.Filename}}*
+	Original source filename (including original file extension).
+
+*{{.Title}}*
+	A title based on the source filename. The extension is removed, underscores
+	are replaced with spaces, and non-adpositional words are capitalized. A
+	filename like "disable_a_button.md" becomes "Disable a Button".
+
+*{{.LastEdit}}*
+	Most recent modification time of the source file, per filesystem statistics.
+	This action has quite a few methods which are useful for stylizing your date
+	format. For example, {{.LastEdit.Year}} prints only the year. A list of
+	methods is found here: https://pkg.go.dev/time#Time
 
 # AUTHORS
 

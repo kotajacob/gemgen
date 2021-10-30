@@ -10,11 +10,16 @@ gemtext rendering module](https://git.sr.ht/~kota/goldmark-gemtext/).
 The goal is to create proper _hand-made_ gemtext. Links and "autolinks" get
 placed below each paragraph, but a list of links is not printed twice.
 Paragraphs get merged onto a single line, but hardlinks (double spaces or \ at
-the end of a line) will insert manual line breaks. Lists and headings get
-simplified to the gemtext format, emphasis markings get removed (or kept with
-the `-e` option), horizontal rules get turned into 80 character lines, and
-indented code gets converted to the gemtext "fenced" format. For exact usage
-information see `man gemgen` or `gemgen -h` for quick help.
+the end of a line) will insert manual line breaks.
+
+Lists and headings get simplified to the gemtext format, emphasis markings get
+removed (or kept with the `-e` option), horizontal rules get turned into 80
+character lines, and indented code gets converted to the gemtext "fenced"
+format.
+
+Gemgen includes a templating system allowing you to add headers, footers, last
+edit timestamps and more automatically to your output files. For exact usage
+information see `man gemgen`.
 
 ## Packages
 
