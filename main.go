@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -49,7 +48,6 @@ func main() {
 	if err := mt.Parse(opts); err != nil {
 		log.Fatalf("failed parsing templates: %v\n", err)
 	}
-	fmt.Println(mt)
 
 	// Convert named files.
 	fs := afero.NewOsFs()
