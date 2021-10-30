@@ -6,8 +6,10 @@ import (
 	"io"
 	"log"
 	"path/filepath"
+	"strings"
 	"sync"
 	"text/template"
+	"time"
 
 	"git.sr.ht/~kota/gemgen/matchtemplate"
 	"git.sr.ht/~kota/gemgen/options"
@@ -20,7 +22,10 @@ import (
 var DefaultTemplate = template.Must(template.New("default").Parse("{{.Content}}"))
 
 type Gemtext struct {
-	Content string
+	Content  string
+	Filename string
+	Title    string
+	LastEdit time.Time
 }
 
 // ConvertFiles reads Opts and converts the list of named files concurrently.
@@ -46,6 +51,15 @@ func ConvertFiles(fs afero.Fs, opts *options.Opts, mt *matchtemplate.MatchedTemp
 			if err != nil {
 				log.Fatalf("failed reading input file %s: %v\n", name, err)
 			}
+
+			// Get file stat.
+			fi, err := src.Stat()
+			if err != nil {
+				log.Fatalf("failed getting file stat on input file %s, the filesystem could be failing: %v\n", name, err)
+			}
+			g.Filename = fi.Name()
+			g.Title = title(g.Filename)
+			g.LastEdit = fi.ModTime()
 
 			// Convert to gemtext and store output.
 			var buf bytes.Buffer
@@ -122,4 +136,26 @@ func store(fs afero.Fs, input string, output string, data []byte) error {
 		return err
 	}
 	return nil
+}
+
+// title returns a new string without a file extension, with underscores
+// replaced with space, in title case.
+func title(s string) string {
+	// Remove file extension and replace underscores.
+	stripped := s[0 : len(s)-len(filepath.Ext(s))]
+	spaced := strings.ReplaceAll(stripped, "_", " ")
+
+	// Convert to title case, but with special considerations for small words.
+	words := strings.Split(spaced, " ")
+	smallwords := " a an on the to "
+
+	for i, word := range words {
+		// If the word is a small word AND NOT the first word keep it as lower case.
+		if strings.Contains(smallwords, " "+word+" ") && word != string(word[0]) {
+			words[i] = word
+		} else {
+			words[i] = strings.Title(word)
+		}
+	}
+	return strings.Join(words, " ")
 }
