@@ -80,7 +80,7 @@ func BenchmarkConvertFiles100(b *testing.B) {
 }
 
 func BenchmarkConvertFiles50000(b *testing.B) {
-	// create 100 test markdown files
+	// create 50000 test markdown files
 	fs, opts, err := setupData(50000)
 	if err != nil {
 		b.Fatal(err)
