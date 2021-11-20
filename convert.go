@@ -95,9 +95,9 @@ func Convert(r io.Reader, w io.Writer, opts []gem.Option) error {
 	var buf bytes.Buffer
 	md := goldmark.New(
 		goldmark.WithExtensions(
+			wiki.Wiki,
 			extension.Linkify,
 			extension.Strikethrough,
-			wiki.Wiki,
 		),
 	)
 
