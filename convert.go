@@ -14,6 +14,7 @@ import (
 	"git.sr.ht/~kota/gemgen/matchtemplate"
 	"git.sr.ht/~kota/gemgen/options"
 	gem "git.sr.ht/~kota/goldmark-gemtext"
+	wiki "git.sr.ht/~kota/goldmark-wiki"
 	"github.com/spf13/afero"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
@@ -96,6 +97,7 @@ func Convert(r io.Reader, w io.Writer, opts []gem.Option) error {
 		goldmark.WithExtensions(
 			extension.Linkify,
 			extension.Strikethrough,
+			wiki.Wiki,
 		),
 	)
 

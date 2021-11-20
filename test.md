@@ -121,6 +121,14 @@ support open source. Many of the other modding platforms of the past [were
 primary reason I switched to fabric, but it also just so happens to have the
 fastest and fanciest server mods around.
 
+## Wiki link tests
+
+[[kota.nz]]
+
+[[hello.com|world]]
+
+Paragraph [[with]] a [[few]] links [[in]] it.
+
 ## Linkparagraphs
 
 https://selamjie.medium.com/remove-richard-stallman-appendix-a-a7e41e784f88

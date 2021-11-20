@@ -21,6 +21,9 @@ simplified to the gemtext format, emphasis markings get removed (or kept with
 the *-e* option), horizontal rules get turned into 80 character lines, and
 indented code gets converted to the gemtext "fenced" format.
 
+Commonmark markdown is fully supported and a few common extensions have been
+added: autolinks, strikethrough, and wiki style links.
+
 # OPTIONS
 
 *-v*
