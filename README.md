@@ -36,7 +36,11 @@ Build dependencies:
 Optionally configure `config.mk` to specify a different install location.  
 Defaults to `/usr/local/`
 
-`sudo make intstall`
+```
+git clone https://git.sr.ht/~kota/gemgen
+cd gemgen
+sudo make install
+```
 
 ## Uninstall
 
