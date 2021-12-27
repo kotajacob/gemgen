@@ -62,6 +62,7 @@ func ParseArgs(progname string, args []string) (*Opts, string, error) {
 	below : print links in paragraphs below the paragraph
 	off   : ignore links in paragraphs`)
 	headingNewlineFlag := flag.BoolP("heading-newline", "A", false, `disable printing a newline below each heading`)
+	horizontalRuleFlag := flag.StringP("horizontal-rule", "r", "~~~", "representation of horizontal rules")
 
 	err := flag.Parse(args)
 	if err != nil {
@@ -73,9 +74,13 @@ func ParseArgs(progname string, args []string) (*Opts, string, error) {
 		return nil, "", ErrVersion
 	}
 
-	// set output and templates
+	// set basic string flags
 	opts.Output = *outputFlag
 	opts.TemplateArgs = *templateFlag
+	opts.GemOptions = append(
+		opts.GemOptions,
+		gem.WithHorizontalRule(*horizontalRuleFlag),
+	)
 
 	// create gemtext options from flags
 	switch *emphasisFlag {
