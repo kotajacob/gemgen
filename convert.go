@@ -33,7 +33,8 @@ type Gemtext struct {
 // An afero filesystem is used for abstraction. You can create an OS based
 // filesystem with afero.NewOsFs() or a memory backed system with
 // afero.NewMemMapFs().
-// Files are written with the .gmi extension in the source directory.
+// Files are written with the .gmi extension in the output directory. If the
+// output directory is not given, they are written in the source directory.
 // Encountering an error stops the program with an appropriate message.
 func ConvertFiles(fs afero.Fs, opts *options.Opts, mt *matchtemplate.MatchedTemplates) error {
 	// Read and convert the list of files concurrently.
