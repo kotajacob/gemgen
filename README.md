@@ -13,9 +13,11 @@ Paragraphs get merged onto a single line, but hardlinks (double spaces or \ at
 the end of a line) will insert manual line breaks.
 
 Lists and headings get simplified to the gemtext format, emphasis markings get
-removed (or kept with the `-e` option), horizontal rules get turned into 80
-character lines, and indented code gets converted to the gemtext "fenced"
-format.
+removed (or kept with the `-e` option), horizontal rules get turned into `~~~`
+or any other string you'd like with the `-r` option, and indented code gets
+converted to the gemtext "fenced" format. Commonmark markdown is fully supported
+and a few common extensions have been added: autolinks, strikethrough, and wiki
+style links.
 
 Gemgen includes a templating system allowing you to add headers, footers, last
 edit timestamps and more automatically to your output files. For exact usage
