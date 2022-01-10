@@ -38,7 +38,7 @@ type Opts struct {
 // flag.ErrHelp is returned and output will contain the usage message.
 // Another special case is version in which the error will be ErrVersion.
 func ParseArgs(progname string, args []string) (*Opts, string, error) {
-	// setup flagset
+	// Create flagset.
 	flag := flag.NewFlagSet(progname, flag.ContinueOnError)
 	var buf bytes.Buffer
 	flag.SetOutput(&buf)
@@ -47,7 +47,7 @@ func ParseArgs(progname string, args []string) (*Opts, string, error) {
 		flag.PrintDefaults()
 	}
 
-	// define flags
+	// Define flags.
 	versionFlag := flag.BoolP("version", "v", false, "print version and exit")
 	outputFlag := flag.StringP("output", "o", "", "directory to write gemtext files")
 	templateFlag := flag.StringSliceP("template", "t", nil, "specify templates with a regular expression matching input filenames\n\tuse the form \"pattern,/path/to/template\"")
@@ -74,7 +74,7 @@ func ParseArgs(progname string, args []string) (*Opts, string, error) {
 		return nil, "", ErrVersion
 	}
 
-	// set basic string flags
+	// Read boolean and string flags.
 	opts.Output = *outputFlag
 	opts.TemplateArgs = *templateFlag
 	opts.GemOptions = append(
@@ -82,7 +82,7 @@ func ParseArgs(progname string, args []string) (*Opts, string, error) {
 		gem.WithHorizontalRule(*horizontalRuleFlag),
 	)
 
-	// create gemtext options from flags
+	// Create gemtext options from flags.
 	switch *emphasisFlag {
 	case "none":
 	case "markdown":
