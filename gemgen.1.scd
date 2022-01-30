@@ -11,7 +11,9 @@ _gemgen_ [OPTION]... [FILE]...
 # DESCRIPTION
 
 *gemgen* is a tool for converting Commonmark Markdown to Gemtext. Gemgen uses
-the goldmark markdown parser and my gemtext rendering module.
+the goldmark markdown parser and my gemtext rendering module. You may pass
+gemgen a list of files to convert and rename concurrently or pass markdown into
+STDIN and get gemtext from STDOUT.
 
 The goal is to create proper _hand-made_ gemtext. Links and "autolinks" get
 placed below each paragraph, but a list of links is not printed twice.

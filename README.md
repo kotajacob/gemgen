@@ -5,7 +5,9 @@
 Command line tool for converting [Commonmark Markdown](https://commonmark.org/)
 to [Gemtext](https://gemini.circumlunar.space/docs/gemtext.gmi). Gemgen uses the
 [goldmark](https://pkg.go.dev/github.com/yuin/goldmark) markdown parser and [my
-gemtext rendering module](https://git.sr.ht/~kota/goldmark-gemtext/).
+gemtext rendering module](https://git.sr.ht/~kota/goldmark-gemtext/). You may
+pass gemgen a list of files to convert and rename concurrently or pass markdown
+into STDIN and get gemtext from STDOUT.
 
 The goal is to create proper _hand-made_ gemtext. Links and "autolinks" get
 placed below each paragraph, but a list of links is not printed twice.
