@@ -35,7 +35,7 @@ func main() {
 	}
 
 	// Use stdin if no filenames were given.
-	if opts.Names == nil {
+	if len(opts.Names) == 0 {
 		err = Convert(os.Stdin, os.Stdout, opts.GemOptions)
 		if err != nil {
 			log.Fatalf("failed converting STDIN: %v\n", err)
