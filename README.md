@@ -46,6 +46,11 @@ cd gemgen
 sudo make install
 ```
 
+For information about contributing to the project, including discussion or
+questions see
+[CONTRIBUTING.md](https://git.sr.ht/~kota/gemgen/tree/master/CONTRIBUTING.md) in
+this repo.
+
 ## Uninstall
 
 `sudo make uninstall`
