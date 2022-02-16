@@ -63,9 +63,6 @@ create a post by sending [plain
 text](https://man.sr.ht/lists.sr.ht/etiquette.md) emails to
 [~kota/gemgen@lists.sr.ht](mailto:~kota/GEMGEN@todo.sr.ht).
 
-## Coding standards
-Contributions don't need to follow these exactly to be useful.
-
 ## Other ways to help
 Read the man pages and see if anything seems wrong or unclear. I don't have the
 perspective of someone reading it for the first time.
