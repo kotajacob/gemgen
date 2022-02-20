@@ -45,6 +45,10 @@ below for details.
 *-t templates*
 	Input file matching patterns and templates. See *TEMPLATES* for details.
 
+*-l linkregex*
+	Specify a regular expression subsitution to apply to different kinds of links.
+	See *LINKREGEX* for details.
+
 *-e, --emphasis mode*
 	Representation of bold, italics, inline code, and strikethrough.
 
@@ -135,6 +139,56 @@ filename) and the original filename with a last edit timestamp.
 	This action has quite a few methods which are useful for stylizing your date
 	format. For example, {{.LastEdit.Year}} prints only the year. A list of
 	methods is found here: https://pkg.go.dev/time#Time
+
+# LINKREGEX
+
+Gemgen provides a mechanism for modifying the destination of links while they're
+being parsed. You can create subsitutions for different kinds of links
+(markdown, auto, wiki, and image), then match part of the destination with a
+regular expression, and then replace it with a subsitution string.
+
+The syntax is similar to *TEMPLATES*. The form is "type,regex,replacement". For
+example if I want to match wiki style links and replace whitespace with
+underscores:
+
+```
+gemgen -l "wiki,\s,_"
+```
+
+You can include multiple link subsitutions in a row and they will be applied in
+order for each matching link. In my personal vim.wiki I use the following:
+
+```
+gemgen -l "wiki,\s,_,wiki,^,/memex/,image,^,/memex/,wiki,$,.gmi"
+```
+
+*NOTE:* You can also use ^ or $ to match the start / end of a link if you need
+to add a string there without replacing anything.
+
+## LINK TYPES
+
+There are currently 4 different kinds of links recognized by gemgen.
+
+*markdown*
+	These are your standard markdown style links. They use the form
+	*[text](destination)*.
+
+*wiki*
+	This type of link is a markdown extension used by some popular wiki software
+	such as vim.wiki. They use the form *[[destination]]* or the form
+	*[[destination|text]]*.
+
+*auto*
+	Automatic link detection is technically another markdown extension, but are
+	used in most markdown processors such as github. They work by simply pasting a
+	link in your document. It cannot contain spaces for specifics visit:
+	https://github.github.com/gfm/#autolinks-extension-
+
+*image*
+	These are standard markdown image links. In HTML they would be displayed
+	inline, but in gemtext they're represented as any other link. Syntax for
+	images is like the syntax for links but prepended with an exclamation mark
+	*![text](destination)*.
 
 # AUTHORS
 
