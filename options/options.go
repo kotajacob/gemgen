@@ -71,19 +71,25 @@ func ParseArgs(progname string, args []string) (*Opts, string, error) {
 	}
 	var opts Opts
 	opts.Names = flag.Args()
+
+	// Exit early if version is requested.
 	if *versionFlag {
 		return nil, "", ErrVersion
 	}
 
-	// Read boolean and string flags.
-	opts.Output = *outputFlag
-	opts.TemplateArgs = *templateFlag
+	// Handle flags.
 	opts.GemOptions = append(
 		opts.GemOptions,
 		gem.WithHorizontalRule(*horizontalRuleFlag),
 	)
 
-	// Create gemtext options from flags.
+	if *headingNewlineFlag {
+		opts.GemOptions = append(
+			opts.GemOptions,
+			gem.WithHeadingSpace(gem.HeadingSpaceSingle),
+		)
+	}
+
 	switch *emphasisFlag {
 	case "none":
 	case "markdown":
@@ -101,27 +107,37 @@ func ParseArgs(progname string, args []string) (*Opts, string, error) {
 		)
 	}
 
-	if *headingNewlineFlag {
-		opts.GemOptions = append(opts.GemOptions, gem.WithHeadingSpace(gem.HeadingSpaceSingle))
-	}
-
 	switch *headingLinkFlag {
 	case "auto":
 	case "off":
-		opts.GemOptions = append(opts.GemOptions, gem.WithHeadingLink(gem.HeadingLinkOff))
+		opts.GemOptions = append(
+			opts.GemOptions,
+			gem.WithHeadingLink(gem.HeadingLinkOff),
+		)
 	case "below":
-		opts.GemOptions = append(opts.GemOptions, gem.WithHeadingLink(gem.HeadingLinkBelow))
+		opts.GemOptions = append(
+			opts.GemOptions,
+			gem.WithHeadingLink(gem.HeadingLinkBelow),
+		)
 	default:
-		return nil, "", fmt.Errorf("heading link flag type %s is invalid", *headingLinkFlag)
+		return nil, "", fmt.Errorf("heading link flag type %s is invalid",
+			*headingLinkFlag)
 	}
 
 	switch *paragraphLinkFlag {
 	case "below":
 	case "off":
-		opts.GemOptions = append(opts.GemOptions, gem.WithParagraphLink(gem.ParagraphLinkOff))
+		opts.GemOptions = append(
+			opts.GemOptions,
+			gem.WithParagraphLink(gem.ParagraphLinkOff),
+		)
 	default:
-		return nil, "", fmt.Errorf("paragraph link flag type %s is invalid", *paragraphLinkFlag)
+		return nil, "", fmt.Errorf("paragraph link flag type %s is invalid",
+			*paragraphLinkFlag)
 	}
+
+	opts.Output = *outputFlag
+	opts.TemplateArgs = *templateFlag
 
 	if *linkRegexFlag != nil {
 		if len(*linkRegexFlag) > 0 && len(*linkRegexFlag)%3 == 0 {
@@ -138,12 +154,14 @@ func ParseArgs(progname string, args []string) (*Opts, string, error) {
 				case "image":
 					r.Type = gem.LinkImage
 				default:
-					return nil, "", fmt.Errorf("link regex type %s is invalid", (*linkRegexFlag)[i])
+					return nil, "", fmt.Errorf("link regex type %s is invalid",
+						(*linkRegexFlag)[i])
 				}
 
 				r.Regex, err = regexp.Compile((*linkRegexFlag)[i+1])
 				if err != nil {
-					return nil, "", fmt.Errorf("failed to parse link regex: %v", err)
+					return nil, "", fmt.Errorf("failed to parse link regex: %v",
+						err)
 				}
 
 				r.Replacement = (*linkRegexFlag)[i+2]
