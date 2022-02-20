@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 
 	gem "git.sr.ht/~kota/goldmark-gemtext"
@@ -111,7 +110,7 @@ func ParseArgs(progname string, args []string) (*Opts, string, error) {
 	case "below":
 		opts.GemOptions = append(opts.GemOptions, gem.WithHeadingLink(gem.HeadingLinkBelow))
 	default:
-		log.Println("unknown link mode")
+		return nil, "", fmt.Errorf("heading link flag type %s is invalid", *headingLinkFlag)
 	}
 
 	switch *paragraphLinkFlag {
@@ -119,7 +118,7 @@ func ParseArgs(progname string, args []string) (*Opts, string, error) {
 	case "off":
 		opts.GemOptions = append(opts.GemOptions, gem.WithParagraphLink(gem.ParagraphLinkOff))
 	default:
-		log.Println("unknown link mode")
+		return nil, "", fmt.Errorf("paragraph link flag type %s is invalid", *paragraphLinkFlag)
 	}
 	return &opts, buf.String(), nil
 }
