@@ -78,6 +78,31 @@ func ParseArgs(progname string, args []string) (*Opts, string, error) {
 	}
 
 	// Handle flags.
+	opts.TemplateArgs = *templateFlag
+
+	opts.Output = *outputFlag
+	if opts.Output != "" {
+		// Ensure path exists and is a directory.
+		fi, err := os.Stat(opts.Output)
+		if err != nil {
+			if os.IsNotExist(err) {
+				// If the directory is missing, create it.
+				err = os.MkdirAll(opts.Output, 0755)
+				if err != nil {
+					return nil, "",
+						fmt.Errorf("failed creating output directory: %v", err)
+				}
+			} else {
+				return nil, "",
+					fmt.Errorf("critically failed reading output path: %v", err)
+			}
+		} else {
+			if !fi.IsDir() {
+				return nil, "", fmt.Errorf("output path is not a directory")
+			}
+		}
+	}
+
 	opts.GemOptions = append(
 		opts.GemOptions,
 		gem.WithHorizontalRule(*horizontalRuleFlag),
@@ -135,9 +160,6 @@ func ParseArgs(progname string, args []string) (*Opts, string, error) {
 		return nil, "", fmt.Errorf("paragraph link flag type %s is invalid",
 			*paragraphLinkFlag)
 	}
-
-	opts.Output = *outputFlag
-	opts.TemplateArgs = *templateFlag
 
 	if *linkRegexFlag != nil {
 		if len(*linkRegexFlag) > 0 && len(*linkRegexFlag)%3 == 0 {
