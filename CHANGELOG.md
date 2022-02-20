@@ -1,8 +1,9 @@
 # Change Log
 
-## [unreleased]
+## [0.6.0] - 2022-02-21
 ### Added
 - Modify links with regular expressions.
+- Create output dir if missing.
 
 ## [0.5.1] - 2022-01-31
 ### Fixed
