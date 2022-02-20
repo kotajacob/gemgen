@@ -28,7 +28,7 @@ even added a templating system and an option for modifying links with regular
 expressions (to change the file extension for example). Checkout `man gemgen`
 for details.
 
-If you have suggestions of issues drop a message in the
+If you have suggestions, questions, or issues drop a message in the
 [mailing list](https://lists.sr.ht/~kota/gemgen) or checkout
 [CONTRIBUTING.md](https://git.sr.ht/~kota/gemgen/tree/master/CONTRIBUTING.md)
 for an overview of the project and libraries.
