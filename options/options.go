@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"regexp"
 
 	gem "git.sr.ht/~kota/goldmark-gemtext"
 	flag "github.com/spf13/pflag"
@@ -50,6 +51,7 @@ func ParseArgs(progname string, args []string) (*Opts, string, error) {
 	versionFlag := flag.BoolP("version", "v", false, "print version and exit")
 	outputFlag := flag.StringP("output", "o", "", "directory to write gemtext files")
 	templateFlag := flag.StringSliceP("template", "t", nil, "specify templates with a regular expression matching input filenames\n\tuse the form \"pattern,/path/to/template\"")
+	linkRegexFlag := flag.StringSliceP("link-regex", "l", nil, "specify a regular expression substitution to apply to links\n\tuse the form \"type,pattern,replacement\"")
 	emphasisFlag := flag.StringP("emphasis", "e", "none", `representation of bold, italics, inline code, and strikethrough
 	none     : do not print emphasis marks
 	markdown : print markdown style emphasis marks`)
@@ -120,5 +122,41 @@ func ParseArgs(progname string, args []string) (*Opts, string, error) {
 	default:
 		return nil, "", fmt.Errorf("paragraph link flag type %s is invalid", *paragraphLinkFlag)
 	}
+
+	if *linkRegexFlag != nil {
+		if len(*linkRegexFlag) > 0 && len(*linkRegexFlag)%3 == 0 {
+			var replacers []gem.LinkReplacer
+			for i := 0; i < len(*linkRegexFlag); i += 3 {
+				var r gem.LinkReplacer
+				switch (*linkRegexFlag)[i] {
+				case "markdown":
+					r.Type = gem.LinkMarkdown
+				case "auto":
+					r.Type = gem.LinkAuto
+				case "wiki":
+					r.Type = gem.LinkWiki
+				case "image":
+					r.Type = gem.LinkImage
+				default:
+					return nil, "", fmt.Errorf("link regex type %s is invalid", (*linkRegexFlag)[i])
+				}
+
+				r.Regex, err = regexp.Compile((*linkRegexFlag)[i+1])
+				if err != nil {
+					return nil, "", fmt.Errorf("failed to parse link regex: %v", err)
+				}
+
+				r.Replacement = (*linkRegexFlag)[i+2]
+				replacers = append(replacers, r)
+				opts.GemOptions = append(
+					opts.GemOptions,
+					gem.WithLinkReplacers(replacers),
+				)
+			}
+		} else {
+			return nil, "", fmt.Errorf(`wrong number of link regex options: requires the form "type,pattern,replacement"`)
+		}
+	}
+
 	return &opts, buf.String(), nil
 }

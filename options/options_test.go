@@ -1,6 +1,7 @@
 package options
 
 import (
+	"regexp"
 	"strings"
 	"testing"
 
@@ -37,6 +38,19 @@ func TestOptions(t *testing.T) {
 			[]string{"-p", "off"},
 			[]gem.Option{gem.WithParagraphLink(gem.ParagraphLinkOff), gem.WithHorizontalRule("~~~")},
 		},
+		{
+			[]string{"-l", "wiki,^,/memex/"},
+			[]gem.Option{
+				gem.WithHorizontalRule("~~~"),
+				gem.WithLinkReplacers([]gem.LinkReplacer{
+					{
+						Type:        gem.LinkWiki,
+						Regex:       regexp.MustCompile("^"),
+						Replacement: "/memex/",
+					},
+				}),
+			},
+		},
 	}
 
 	for _, tt := range tests {
@@ -56,7 +70,16 @@ func TestOptions(t *testing.T) {
 			for _, opt := range opts.GemOptions {
 				opt.SetConfig(got)
 			}
-			if diff := cmp.Diff(want, got); diff != "" {
+
+			// When comparing regular expressions there are several unexported
+			// fields used for various optimizations. We really only care that
+			// the strings are equal. So, we need to give go-cmp a custom
+			// comparer or it will panic over the unexported fields.
+			regexComparer := cmp.Comparer(func(x, y *regexp.Regexp) bool {
+				return x.String() == y.String()
+			})
+
+			if diff := cmp.Diff(want, got, regexComparer); diff != "" {
 				t.Errorf("TestOptions() mismatch (-want +got):\n%s", diff)
 			}
 		})

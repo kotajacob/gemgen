@@ -1,5 +1,9 @@
 # Change Log
 
+## [unreleased]
+### Added
+- Modify links with regular expressions.
+
 ## [0.5.1] - 2022-01-31
 ### Fixed
 - Reading markdown from STDIN and writing gemtext to STDOUT.
