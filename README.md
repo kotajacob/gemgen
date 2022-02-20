@@ -21,9 +21,17 @@ converted to the gemtext "fenced" format. Commonmark markdown is fully supported
 and a few common extensions have been added: autolinks, strikethrough, and wiki
 style links.
 
-Gemgen includes a templating system allowing you to add headers, footers, last
-edit timestamps and more automatically to your output files. For exact usage
-information see `man gemgen`.
+I've poured hundreds of hours into `gemgen` and the libraries it uses, but there
+are no doubt still some edge cases. There's options for things like adding blank
+lines after headings, converting "link only" headings to links and so on. I've
+even added a templating system and an option for modifying links with regular
+expressions (to change the file extension for example). Checkout `man gemgen`
+for details.
+
+If you have suggestions of issues drop a message in the
+[mailing list](https://lists.sr.ht/~kota/gemgen) or checkout
+[CONTRIBUTING.md](https://git.sr.ht/~kota/gemgen/tree/master/CONTRIBUTING.md)
+for an overview of the project and libraries.
 
 ## Packages
 
@@ -45,11 +53,6 @@ git clone https://git.sr.ht/~kota/gemgen
 cd gemgen
 sudo make install
 ```
-
-For information about contributing to the project, including discussion or
-questions see
-[CONTRIBUTING.md](https://git.sr.ht/~kota/gemgen/tree/master/CONTRIBUTING.md) in
-this repo.
 
 ## Uninstall
 
