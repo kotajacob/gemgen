@@ -35,7 +35,8 @@ for an overview of the project and libraries.
 
 ## Packages
 
-`gemgen` - Arch Linux (AUR)
+`gemgen` - Arch Linux (AUR)\
+`gemgen` - MacOS (Homebrew)
 
 ## Build
 
